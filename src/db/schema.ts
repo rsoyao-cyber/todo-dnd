@@ -8,6 +8,7 @@ export interface Task {
   createdAt: number;
   completedAt?: number;
   lastNudgedAt?: number;
+  lastSeenAt?: number;
   snoozedUntil?: number;
   weekId: string;
 }
@@ -62,6 +63,13 @@ export class CodexDB extends Dexie {
         );
         await tx.table('tasks').where('list').equals('someday').delete();
       }
+    });
+
+    // v3: adds lastSeenAt index on tasks for stale-nudge queries
+    this.version(3).stores({
+      tasks:       'id, list, weekId, priority, completedAt, lastSeenAt',
+      ideas:       'id, weekId, createdAt',
+      weekReviews: 'id, weekId',
     });
   }
 }

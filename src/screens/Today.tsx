@@ -1,12 +1,22 @@
+import { useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTasks } from '../hooks/useTasks';
 import TaskList from '../components/tasks/TaskList';
 import TaskRow from '../components/tasks/TaskRow';
 import AddTaskInput from '../components/tasks/AddTaskInput';
+import { db } from '../db/schema';
 
 export default function Today() {
   const { tasks, addTask, toggleComplete, deleteTask, reorderTask, moveTask } = useTasks('today');
   const open = tasks.filter(t => !t.completedAt);
+
+  // Update lastSeenAt for all open Today tasks — gives the nudge system accurate signal
+  useEffect(() => {
+    db.tasks
+      .where('list').equals('today')
+      .and(t => !t.completedAt)
+      .modify({ lastSeenAt: Date.now() });
+  });
   const done = tasks.filter(t => !!t.completedAt);
 
   return (

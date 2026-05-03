@@ -1,6 +1,9 @@
 import { useRef, useState } from 'react';
 import { db } from '../db/schema';
 import { isSoundEnabled, setSoundEnabled } from '../lib/sound';
+import { getNudgeThreshold, setNudgeThreshold } from '../lib/nudges';
+
+const THRESHOLD_STEPS = [1, 3, 5, 7];
 
 interface Props {
   onClose: () => void;
@@ -54,11 +57,19 @@ async function importData(file: File): Promise<string> {
 export default function Settings({ onClose }: Props) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [soundOn, setSoundOn] = useState(isSoundEnabled);
+  const [threshold, setThreshold] = useState(getNudgeThreshold);
 
   const toggleSound = () => {
     const next = !soundOn;
     setSoundOn(next);
     setSoundEnabled(next);
+  };
+
+  const cycleThreshold = () => {
+    const idx = THRESHOLD_STEPS.indexOf(threshold);
+    const next = THRESHOLD_STEPS[(idx + 1) % THRESHOLD_STEPS.length];
+    setThreshold(next);
+    setNudgeThreshold(next);
   };
 
   const handleExport = async () => {
@@ -120,6 +131,26 @@ export default function Settings({ onClose }: Props) {
             style={{ color: soundOn ? 'var(--color-accent)' : 'var(--color-ink-3)' }}
           >
             {soundOn ? 'On' : 'Off'}
+          </span>
+        </button>
+
+        <p className="font-mono text-[10px] tracking-widest uppercase mb-1 mt-4" style={{ color: 'var(--color-ink-3)' }}>
+          Nudges
+        </p>
+
+        <button
+          onClick={cycleThreshold}
+          className="w-full flex items-center justify-between px-4 py-3 border border-hairline font-serif text-base"
+          style={{ backgroundColor: 'var(--color-paper-2)', color: 'var(--color-ink)' }}
+        >
+          <span>
+            Nudge after idle days
+            <span className="block font-mono text-[10px] tracking-wider uppercase mt-0.5" style={{ color: 'var(--color-ink-3)' }}>
+              Flag tasks not seen for N days
+            </span>
+          </span>
+          <span className="font-mono text-[10px] tracking-widest uppercase shrink-0 ml-4" style={{ color: 'var(--color-accent)' }}>
+            {threshold}d
           </span>
         </button>
 

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import TabBar from './components/shared/TabBar';
+import NudgeBanner from './components/NudgeBanner';
 import Today from './screens/Today';
 import Week from './screens/Week';
 import Ideas from './screens/Ideas';
@@ -26,14 +27,17 @@ export default function App() {
 
   return (
     <div className="flex flex-col bg-paper" style={{ height: '100dvh' }}>
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden flex flex-col">
         {settingsOpen ? (
           <Settings onClose={() => setSettingsOpen(false)} />
         ) : (
           <>
-            {tab === 'today' && <Today />}
-            {tab === 'week'  && <Week />}
-            {tab === 'ideas' && <Ideas />}
+            <NudgeBanner onGoToToday={() => setTab('today')} />
+            <div className="flex-1 overflow-hidden">
+              {tab === 'today' && <Today />}
+              {tab === 'week'  && <Week />}
+              {tab === 'ideas' && <Ideas />}
+            </div>
           </>
         )}
       </div>
