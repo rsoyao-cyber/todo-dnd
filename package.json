@@ -16,6 +16,11 @@
     "react": "^19.2.5",
     "react-dom": "^19.2.5"
   },
+  "overrides": {
+    "vite-plugin-pwa": {
+      "vite": "$vite"
+    }
+  },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@tailwindcss/vite": "^4.2.4",
