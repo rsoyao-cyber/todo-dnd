@@ -1,12 +1,11 @@
 import { useState } from 'react';
-import TabBar from './components/shared/TabBar';
+import TabBar, { type Tab } from './components/shared/TabBar';
 import NudgeBanner from './components/NudgeBanner';
 import Today from './screens/Today';
 import Week from './screens/Week';
 import Ideas from './screens/Ideas';
+import Library from './screens/Library';
 import Settings from './screens/Settings';
-
-type Tab = 'today' | 'week' | 'ideas';
 
 function GearIcon() {
   return (
@@ -37,6 +36,7 @@ export default function App() {
               {tab === 'today' && <Today />}
               {tab === 'week'  && <Week />}
               {tab === 'ideas' && <Ideas />}
+              {tab === 'codex' && <Library />}
             </div>
           </>
         )}

@@ -33,10 +33,22 @@ export interface WeekReview {
   createdAt: number;
 }
 
+export interface ConsumedItem {
+  id: string;
+  title: string;
+  type: 'book' | 'movie' | 'show' | 'video' | 'game' | 'other';
+  rating?: 1 | 2 | 3 | 4 | 5;
+  note?: string;
+  source?: string;
+  completedAt: number;
+  weekId: string;
+}
+
 export class CodexDB extends Dexie {
   tasks!: Table<Task>;
   ideas!: Table<Idea>;
   weekReviews!: Table<WeekReview>;
+  consumedItems!: Table<ConsumedItem>;
 
   constructor() {
     super('codex');
@@ -65,11 +77,18 @@ export class CodexDB extends Dexie {
       }
     });
 
-    // v3: adds lastSeenAt index on tasks for stale-nudge queries
     this.version(3).stores({
       tasks:       'id, list, weekId, priority, completedAt, lastSeenAt',
       ideas:       'id, weekId, createdAt',
       weekReviews: 'id, weekId',
+    });
+
+    // v4: adds consumedItems (the Codex / Library tab)
+    this.version(4).stores({
+      tasks:         'id, list, weekId, priority, completedAt, lastSeenAt',
+      ideas:         'id, weekId, createdAt',
+      weekReviews:   'id, weekId',
+      consumedItems: 'id, weekId, completedAt, type',
     });
   }
 }
