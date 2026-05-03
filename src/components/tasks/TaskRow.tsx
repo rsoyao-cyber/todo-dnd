@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
 import type { Task } from '../../db/schema';
+import { Sigil } from '../shared/Sigil';
 import { buzz } from '../../lib/haptics';
 import { playIfEnabled } from '../../lib/sound';
 import { fireCompletionConfetti } from '../../lib/confetti';
@@ -126,15 +127,18 @@ export default function TaskRow({
           onMouseDown={e => e.stopPropagation()}
           onTouchStart={e => { e.stopPropagation(); cancelPress(); }}
           onClick={handleToggle}
-          className="mt-0.5 shrink-0 text-base leading-none"
-          animate={{
-            color: completing || done ? '#A84A2A' : '#8A7656',
-            scale: completing ? [1, 1.3, 1] : 1,
-          }}
+          className="mt-0.5 shrink-0"
+          animate={{ scale: completing ? [1, 1.3, 1] : 1 }}
           transition={{ duration: 0.2 }}
           aria-label={done ? 'Mark incomplete' : 'Mark complete'}
         >
-          {completing || done ? '◆' : '◇'}
+          <Sigil
+            shape="diamond"
+            filled={completing || done}
+            color="var(--color-accent)"
+            ring={completing || done ? 'var(--color-accent)' : 'var(--color-ink-3)'}
+            size={22}
+          />
         </motion.button>
 
         {/* Title + strikethrough */}

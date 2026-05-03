@@ -1,6 +1,27 @@
 @import "tailwindcss";
 @import url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=JetBrains+Mono:wght@500;600&display=swap");
 
+/* design tokens from /docs/design/visual-direction.md */
+:root {
+  --display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --ui:      'Lora', 'Iowan Old Style', Georgia, serif;
+  --mono:    'JetBrains Mono', ui-monospace, Menlo, monospace;
+  --pixel:   'VT323', ui-monospace, monospace;
+}
+
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--ui);
+  background: #ECE3D2;
+  color: #1A1714;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* keyframes — see visual-direction.md for which moment uses which */
+@keyframes burst { /* ... */ }
+@keyframes pulse { /* ... */ }
+/* etc. */
+
 @theme {
   --color-paper:        #F4ECD8;
   --color-paper-2:      #EFE5C8;

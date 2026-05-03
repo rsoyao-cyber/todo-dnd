@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { Task } from '../db/schema';
 import { getStaleTasks, snoozeTask, dropTask } from '../lib/nudges';
+import { Fleuron } from './shared/Fleuron';
 
 const SESSION_KEY = 'codex-nudge-shown';
 
@@ -82,11 +83,16 @@ export default function NudgeBanner({ onGoToToday }: Props) {
           className="mx-4 mt-3 border border-hairline"
           style={{ backgroundColor: 'var(--color-paper-2)' }}
         >
+          {/* Fleuron ornament */}
+          <div className="flex justify-center pt-3">
+            <Fleuron color="var(--color-hairline)" w={60} />
+          </div>
+
           {/* Header */}
-          <div className="flex items-start justify-between px-4 pt-4 pb-2">
+          <div className="flex items-start justify-between px-4 pt-2 pb-2">
             <div>
               <p className="font-mono text-[10px] tracking-widest uppercase" style={{ color: 'var(--color-accent)' }}>
-                ❉ Resting · {staleDays(current)} day{staleDays(current) !== 1 ? 's' : ''}
+                Resting · {staleDays(current)} day{staleDays(current) !== 1 ? 's' : ''}
                 {tasks.length > 1 && (
                   <span style={{ color: 'var(--color-ink-3)' }}>
                     {' '}· {index + 1} of {tasks.length}

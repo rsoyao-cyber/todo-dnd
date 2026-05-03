@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { ConsumedItem } from '../../db/schema';
+import { Sprite } from '../sprites/Sprite';
 import { TYPE_META, TYPE_ORDER } from './typesMeta';
 import { getWeekId, getWeekNumber } from '../../lib/weekId';
 
@@ -120,16 +121,22 @@ export default function QuickAddModal({ onAdd, onClose }: Props) {
                     onClick={() => setType(t)}
                     className="flex flex-col items-center gap-1 py-2 border transition-colors"
                     style={{
-                      borderWidth:  active ? '2px' : '1px',
-                      borderColor:  active ? 'var(--color-accent)' : 'var(--color-hairline)',
+                      borderWidth:     active ? '2px' : '1px',
+                      borderColor:     active ? 'var(--color-accent)' : 'var(--color-hairline)',
                       backgroundColor: active ? 'var(--color-paper-3)' : 'var(--color-paper)',
                     }}
                   >
+                    <Sprite
+                      name={TYPE_META[t].glyph}
+                      size={20}
+                      color={active ? 'var(--color-accent)' : 'var(--color-ink)'}
+                      accent="var(--color-accent)"
+                    />
                     <span
                       className="font-mono text-[9px] tracking-wider uppercase"
                       style={{ color: active ? 'var(--color-accent)' : 'var(--color-ink-3)' }}
                     >
-                      {TYPE_META[t].abbr}
+                      {TYPE_META[t].label}
                     </span>
                   </button>
                 );
@@ -230,15 +237,18 @@ export default function QuickAddModal({ onAdd, onClose }: Props) {
             >
               {/* Type sprite */}
               <div className="relative flex items-center justify-center">
-                <motion.span
-                  className="font-mono text-3xl tracking-widest uppercase"
-                  style={{ color: 'var(--color-accent)' }}
+                <motion.div
                   initial={{ scale: 0.4, opacity: 0 }}
                   animate={{ scale: [0.4, 1.15, 1], opacity: 1 }}
                   transition={{ duration: 0.32, ease: [0.34, 1.56, 0.64, 1] }}
                 >
-                  {TYPE_META[type].abbr}
-                </motion.span>
+                  <Sprite
+                    name={TYPE_META[type].glyph}
+                    size={72}
+                    color="var(--color-accent)"
+                    accent="var(--color-accent)"
+                  />
+                </motion.div>
 
                 {/* Burst 1 — accent-clay */}
                 {BURST_1.map((pos, i) => (

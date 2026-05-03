@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { ConsumedItem } from '../../db/schema';
+import { Sprite } from '../sprites/Sprite';
 import { TYPE_META } from './typesMeta';
 
 interface Props {
@@ -40,13 +41,10 @@ export default function ItemRow({ item, onDelete }: Props) {
         className="flex items-start gap-3 px-5 py-3 cursor-pointer select-none"
         onClick={() => setExpanded(e => !e)}
       >
-        {/* Type abbr */}
-        <span
-          className="font-mono text-[9px] tracking-widest uppercase shrink-0 w-8 pt-1 text-right"
-          style={{ color: 'var(--color-ink-3)' }}
-        >
-          {meta.abbr}
-        </span>
+        {/* Type sprite */}
+        <div className="shrink-0 pt-0.5">
+          <Sprite name={meta.glyph} size={20} color="var(--color-ink)" accent="var(--color-accent)" />
+        </div>
 
         <div className="flex-1 min-w-0">
           <p
@@ -89,7 +87,7 @@ export default function ItemRow({ item, onDelete }: Props) {
             transition={{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }}
             className="overflow-hidden"
           >
-            <div className="px-5 pb-3" style={{ paddingLeft: 'calc(1.25rem + 2rem + 0.75rem)' }}>
+            <div className="px-5 pb-3" style={{ paddingLeft: 'calc(1.25rem + 20px + 0.75rem)' }}>
               {item.note && (
                 <p
                   className="font-serif italic text-sm leading-relaxed mb-2"

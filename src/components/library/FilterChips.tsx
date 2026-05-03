@@ -1,4 +1,5 @@
 import type { ConsumedItem } from '../../db/schema';
+import { Sprite } from '../sprites/Sprite';
 import { TYPE_META, TYPE_ORDER } from './typesMeta';
 
 export type TypeFilter = ConsumedItem['type'] | null;
@@ -18,8 +19,8 @@ export default function FilterChips({ value, onChange }: Props) {
         onClick={() => onChange(null)}
         className="shrink-0 font-mono text-[10px] tracking-widest uppercase px-2 py-1 border transition-colors"
         style={{
-          borderColor: value === null ? 'var(--color-accent)' : 'var(--color-hairline)',
-          color:       value === null ? 'var(--color-accent)' : 'var(--color-ink-3)',
+          borderColor:     value === null ? 'var(--color-accent)' : 'var(--color-hairline)',
+          color:           value === null ? 'var(--color-accent)' : 'var(--color-ink-3)',
           backgroundColor: 'var(--color-paper)',
         }}
       >
@@ -27,18 +28,25 @@ export default function FilterChips({ value, onChange }: Props) {
       </button>
       {TYPE_ORDER.map(type => {
         const active = value === type;
+        const meta   = TYPE_META[type];
         return (
           <button
             key={type}
             onClick={() => onChange(type)}
-            className="shrink-0 font-mono text-[10px] tracking-widest uppercase px-2 py-1 border transition-colors"
+            className="shrink-0 flex items-center gap-1 font-mono text-[10px] tracking-widest uppercase px-2 py-1 border transition-colors"
             style={{
-              borderColor: active ? 'var(--color-accent)' : 'var(--color-hairline)',
-              color:       active ? 'var(--color-accent)' : 'var(--color-ink-3)',
+              borderColor:     active ? 'var(--color-accent)' : 'var(--color-hairline)',
+              color:           active ? 'var(--color-accent)' : 'var(--color-ink-3)',
               backgroundColor: 'var(--color-paper)',
             }}
           >
-            {TYPE_META[type].label}
+            <Sprite
+              name={meta.glyph}
+              size={11}
+              color={active ? 'var(--color-accent)' : 'var(--color-ink-3)'}
+              accent={active ? 'var(--color-accent)' : 'var(--color-ink-3)'}
+            />
+            {meta.label}
           </button>
         );
       })}

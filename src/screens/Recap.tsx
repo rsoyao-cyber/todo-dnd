@@ -6,12 +6,15 @@ import type { Task, IdeaMeta } from '../db/schema';
 import { getWeekNumber, getWeekDateRange } from '../lib/weekId';
 import { dropTask, snoozeTask } from '../lib/nudges';
 import { TYPE_META } from '../components/library/typesMeta';
+import { Sprite } from '../components/sprites/Sprite';
+import type { SpriteName } from '../components/sprites/sprites';
+import { Fleuron } from '../components/shared/Fleuron';
 
 // ── Animation ──────────────────────────────────────────────────────────────
 const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
-function Section({ index, sigil, numeral, title, children }: {
-  index: number; sigil: string; numeral: string; title: string; children: React.ReactNode;
+function Section({ index, glyph, numeral, title, children }: {
+  index: number; glyph: SpriteName; numeral: string; title: string; children: React.ReactNode;
 }) {
   return (
     <motion.section
@@ -21,12 +24,16 @@ function Section({ index, sigil, numeral, title, children }: {
       transition={{ duration: 0.54, delay: index * 0.08, ease }}
       className="px-5 py-5 border-b border-hairline"
     >
-      <div className="flex items-baseline gap-2 mb-3">
-        <span className="font-mono text-[10px] tracking-widest" style={{ color: 'var(--color-accent)' }}>
-          {sigil}
+      <div className="flex items-center gap-2 mb-3">
+        <Sprite name={glyph} size={22} color="var(--color-accent)" accent="var(--color-accent)" />
+        <span
+          className="font-serif italic text-xl"
+          style={{ color: 'var(--color-accent)', lineHeight: 1 }}
+        >
+          {numeral}.
         </span>
         <span className="font-mono text-[10px] tracking-widest uppercase" style={{ color: 'var(--color-ink-3)' }}>
-          {numeral}.&nbsp;&nbsp;{title}
+          {title}
         </span>
       </div>
       {children}
@@ -102,7 +109,7 @@ function ReflectionArea({ value, weekId, onSave }: {
   value?: string; weekId: string; onSave: (t: string) => Promise<void>;
 }) {
   const [text, setText] = useState(value ?? '');
-  const timerRef        = useRef<ReturnType<typeof setTimeout>>();
+  const timerRef        = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   // Re-sync when navigating to a different week
   useEffect(() => { setText(value ?? ''); }, [weekId, value]);
@@ -173,9 +180,9 @@ export default function Recap({ onGoToToday }: { onGoToToday: () => void }) {
               <h1 className="font-serif italic text-2xl mt-1" style={{ color: 'var(--color-ink)' }}>
                 The week that was
               </h1>
-              <p className="font-mono text-[11px] tracking-widest mt-2" style={{ color: 'var(--color-hairline)' }}>
-                ━━━━ ★ ━━━━
-              </p>
+              <div className="mt-3 flex justify-center">
+                <Fleuron color="var(--color-hairline)" w={80} />
+              </div>
             </div>
             <button
               onClick={() => setOffset(o => Math.min(o + 1, -1))}
@@ -191,7 +198,7 @@ export default function Recap({ onGoToToday }: { onGoToToday: () => void }) {
         </motion.div>
 
         {/* ── I. Closed ── */}
-        <Section index={0} sigil="⊗" numeral="I" title="Closed">
+        <Section index={0} glyph="sword" numeral="I" title="Closed">
           {completedTasks.length === 0 ? (
             <p className="font-serif italic text-base" style={{ color: 'var(--color-ink-3)' }}>
               A quiet week for finishing things.
@@ -217,7 +224,7 @@ export default function Recap({ onGoToToday }: { onGoToToday: () => void }) {
         </Section>
 
         {/* ── II. What landed ── */}
-        <Section index={1} sigil="◈" numeral="II" title="What landed">
+        <Section index={1} glyph="crown" numeral="II" title="What landed">
           {synthesisText ? (
             <>
               <p className="font-mono text-[10px] tracking-widest uppercase mb-2" style={{ color: 'var(--color-ink-3)' }}>
@@ -242,7 +249,7 @@ export default function Recap({ onGoToToday }: { onGoToToday: () => void }) {
         </Section>
 
         {/* ── III. What you took in ── */}
-        <Section index={2} sigil="§" numeral="III" title="What you took in">
+        <Section index={2} glyph="book" numeral="III" title="What you took in">
           {consumedItems.length === 0 ? (
             <p className="font-serif italic text-base" style={{ color: 'var(--color-ink-3)' }}>
               A quiet week for taking in. That's a real thing too.
@@ -269,7 +276,7 @@ export default function Recap({ onGoToToday }: { onGoToToday: () => void }) {
         </Section>
 
         {/* ── IV. Ideas captured ── */}
-        <Section index={3} sigil="¶" numeral="IV" title="Ideas captured">
+        <Section index={3} glyph="lantern" numeral="IV" title="Ideas captured">
           {capturedIdeas.length === 0 ? (
             <p className="font-serif italic text-base" style={{ color: 'var(--color-ink-3)' }}>
               Nothing held this week.
@@ -303,7 +310,7 @@ export default function Recap({ onGoToToday }: { onGoToToday: () => void }) {
         </Section>
 
         {/* ── V. Carried forward ── */}
-        <Section index={4} sigil="→" numeral="V" title="Carried forward">
+        <Section index={4} glyph="compass" numeral="V" title="Carried forward">
           {activeTasks.length === 0 ? (
             <p className="font-serif italic text-base" style={{ color: 'var(--color-ink-3)' }}>
               {carriedForwardTasks.length === 0
@@ -327,7 +334,7 @@ export default function Recap({ onGoToToday }: { onGoToToday: () => void }) {
         </Section>
 
         {/* ── VI. A note ── */}
-        <Section index={5} sigil="◌" numeral="VI" title="A note">
+        <Section index={5} glyph="eye" numeral="VI" title="A note">
           <ReflectionArea
             value={reflection}
             weekId={weekId}
@@ -343,9 +350,13 @@ export default function Recap({ onGoToToday }: { onGoToToday: () => void }) {
           transition={{ duration: 0.54, ease }}
           className="px-5 py-10 flex flex-col items-center gap-4"
         >
-          <p className="font-mono text-[11px] tracking-widest" style={{ color: 'var(--color-hairline)' }}>
-            ━━━━ ★ ━━━━
-          </p>
+          <div className="flex items-center justify-center gap-3">
+            <Sprite name="coin"   size={22} color="var(--color-accent)" accent="var(--color-accent)" />
+            <Sprite name="key"    size={22} color="var(--color-accent)" accent="var(--color-accent)" />
+            <Sprite name="potion" size={22} color="var(--color-accent)" accent="var(--color-accent)" />
+            <Sprite name="star"   size={22} color="var(--color-accent)" accent="var(--color-accent)" />
+          </div>
+          <Fleuron color="var(--color-hairline)" w={80} />
           <p className="font-serif italic text-xl" style={{ color: 'var(--color-ink-3)' }}>
             Onward.
           </p>
