@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion, Reorder } from 'framer-motion';
+import { AnimatePresence, Reorder } from 'framer-motion';
 import type { Task } from '../../db/schema';
 import TaskRow from './TaskRow';
 

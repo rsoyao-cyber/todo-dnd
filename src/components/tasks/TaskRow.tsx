@@ -27,7 +27,7 @@ export default function TaskRow({
   labelLeft,
   labelRight,
 }: Props) {
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const [pressing, setPressing] = useState(false);
   const [completing, setCompleting] = useState(false);
   const done = !!task.completedAt;
