@@ -1,9 +1,11 @@
+import { AnimatePresence, motion } from 'framer-motion';
 import { useTasks } from '../hooks/useTasks';
+import TaskList from '../components/tasks/TaskList';
 import TaskRow from '../components/tasks/TaskRow';
 import AddTaskInput from '../components/tasks/AddTaskInput';
 
 export default function Ideas() {
-  const { tasks, addTask, toggleComplete, deleteTask } = useTasks('someday');
+  const { tasks, addTask, toggleComplete, deleteTask, reorderTask, moveTask } = useTasks('someday');
   const open = tasks.filter(t => !t.completedAt);
   const done = tasks.filter(t => !!t.completedAt);
 
@@ -20,39 +22,51 @@ export default function Ideas() {
 
       <div className="flex-1 overflow-y-auto">
         {open.length === 0 && done.length === 0 && (
-          <p className="px-5 py-8 font-serif italic text-base" style={{ color: 'var(--color-ink-3)' }}>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="px-5 py-8 font-serif italic text-base"
+            style={{ color: 'var(--color-ink-3)' }}
+          >
             A passing thought…
-          </p>
+          </motion.p>
         )}
 
-        {open.map(task => (
-          <div key={task.id}>
-            <TaskRow
-              task={task}
-              onToggle={() => toggleComplete(task.id)}
-              onDelete={() => deleteTask(task.id)}
-            />
-            <div className="mx-5 border-b border-hairline" />
-          </div>
-        ))}
+        <TaskList
+          tasks={open}
+          onToggle={toggleComplete}
+          onDelete={deleteTask}
+          onReorder={reorderTask}
+          onMoveLeft={id => moveTask(id, 'week')}
+          onMoveRight={id => moveTask(id, 'today')}
+          labelLeft="This Week"
+          labelRight="Today"
+        />
 
-        {done.length > 0 && (
-          <div className="mt-4">
-            <p className="px-5 py-2 font-mono text-[10px] tracking-widest uppercase" style={{ color: 'var(--color-ink-3)' }}>
-              ★ Resolved
-            </p>
-            {done.map(task => (
-              <div key={task.id}>
-                <TaskRow
-                  task={task}
-                  onToggle={() => toggleComplete(task.id)}
-                  onDelete={() => deleteTask(task.id)}
-                />
-                <div className="mx-5 border-b border-hairline" />
-              </div>
-            ))}
-          </div>
-        )}
+        <AnimatePresence>
+          {done.length > 0 && (
+            <motion.div
+              key="done-section"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="mt-4"
+            >
+              <p className="px-5 py-2 font-mono text-[10px] tracking-widest uppercase" style={{ color: 'var(--color-ink-3)' }}>
+                ★ Resolved
+              </p>
+              {done.map(task => (
+                <div key={task.id}>
+                  <TaskRow
+                    task={task}
+                    onToggle={() => toggleComplete(task.id)}
+                    onDelete={() => deleteTask(task.id)}
+                  />
+                  <div className="mx-5 border-b border-hairline" />
+                </div>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <AddTaskInput onAdd={addTask} placeholder="A passing thought…" />

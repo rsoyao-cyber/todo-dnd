@@ -38,5 +38,13 @@ export function useTasks(list: Task['list']) {
     await db.tasks.delete(id);
   }, []);
 
-  return { tasks, addTask, toggleComplete, deleteTask };
+  const reorderTask = useCallback(async (id: string, priority: number) => {
+    await db.tasks.update(id, { priority });
+  }, []);
+
+  const moveTask = useCallback(async (id: string, targetList: Task['list']) => {
+    await db.tasks.update(id, { list: targetList, priority: Date.now() });
+  }, []);
+
+  return { tasks, addTask, toggleComplete, deleteTask, reorderTask, moveTask };
 }

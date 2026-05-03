@@ -1,5 +1,6 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { db } from '../db/schema';
+import { isSoundEnabled, setSoundEnabled } from '../lib/sound';
 
 interface Props {
   onClose: () => void;
@@ -52,6 +53,13 @@ async function importData(file: File): Promise<string> {
 
 export default function Settings({ onClose }: Props) {
   const fileRef = useRef<HTMLInputElement>(null);
+  const [soundOn, setSoundOn] = useState(isSoundEnabled);
+
+  const toggleSound = () => {
+    const next = !soundOn;
+    setSoundOn(next);
+    setSoundEnabled(next);
+  };
 
   const handleExport = async () => {
     try {
@@ -93,6 +101,29 @@ export default function Settings({ onClose }: Props) {
 
       <div className="flex-1 overflow-y-auto px-5 py-6 flex flex-col gap-3">
         <p className="font-mono text-[10px] tracking-widest uppercase mb-1" style={{ color: 'var(--color-ink-3)' }}>
+          Feel
+        </p>
+
+        <button
+          onClick={toggleSound}
+          className="w-full flex items-center justify-between px-4 py-3 border border-hairline font-serif text-base"
+          style={{ backgroundColor: 'var(--color-paper-2)', color: 'var(--color-ink)' }}
+        >
+          <span>
+            Completion sound
+            <span className="block font-mono text-[10px] tracking-wider uppercase mt-0.5" style={{ color: 'var(--color-ink-3)' }}>
+              Short click on task complete
+            </span>
+          </span>
+          <span
+            className="font-mono text-[10px] tracking-widest uppercase shrink-0 ml-4"
+            style={{ color: soundOn ? 'var(--color-accent)' : 'var(--color-ink-3)' }}
+          >
+            {soundOn ? 'On' : 'Off'}
+          </span>
+        </button>
+
+        <p className="font-mono text-[10px] tracking-widest uppercase mb-1 mt-4" style={{ color: 'var(--color-ink-3)' }}>
           Data
         </p>
 
