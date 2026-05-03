@@ -31,3 +31,10 @@ export function getWeekDateRange(weekId: string): string {
   }
   return `${mo} ${monday.getUTCDate()} — ${so} ${sunday.getUTCDate()}`;
 }
+
+// Returns the weekId n weeks offset from today (negative = past)
+export function getWeekIdOffset(weeks: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() + weeks * 7);
+  return getWeekId(d);
+}

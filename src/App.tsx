@@ -5,6 +5,7 @@ import Today from './screens/Today';
 import Week from './screens/Week';
 import Ideas from './screens/Ideas';
 import Library from './screens/Library';
+import Recap from './screens/Recap';
 import Settings from './screens/Settings';
 
 function GearIcon() {
@@ -37,6 +38,7 @@ export default function App() {
               {tab === 'week'  && <Week />}
               {tab === 'ideas' && <Ideas />}
               {tab === 'codex' && <Library />}
+              {tab === 'recap' && <Recap onGoToToday={() => setTab('today')} />}
             </div>
           </>
         )}
